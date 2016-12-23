@@ -6,9 +6,17 @@
  */
 
 #include <string>
+#ifndef _WIN32
 #include <sys/ioctl.h>
+#else
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <winioctl.h>
+#endif
 #include <iostream>
+#ifndef _WIN32
 #include <unistd.h>
+#endif
 #include <cstdlib>
 #include <fstream>
 #include "utils.h"
@@ -44,18 +52,30 @@ void print_center(string input) {
  * Returns the width of the console
  */
 size_t get_console_width() {
+#ifndef _WIN32
 	struct winsize size;
 	ioctl(STDOUT_FILENO,TIOCGWINSZ,&size);
 	return size.ws_col;
+#else
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+	return csbi.srWindow.Right - csbi.srWindow.Left + 1;
+#endif
 }
 
 /*
  * Returns the height of terminal
  */
 size_t get_console_height() {
+#ifndef _WIN32
 	struct winsize size;
 	ioctl(STDOUT_FILENO,TIOCGWINSZ,&size);
 	return size.ws_row;
+#else
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+	return csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+#endif
 }
 
 /*
