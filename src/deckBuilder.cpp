@@ -9,6 +9,8 @@
 #include <sstream>
 #include <fstream>
 #include "dirent.h"
+/// if you get build errors on windows:
+/// https://github.com/tronkko/dirent
 #include "deckBuilder.h"
 #include "utils.h"
 
